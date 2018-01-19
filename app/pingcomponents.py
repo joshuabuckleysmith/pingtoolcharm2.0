@@ -1,0 +1,13 @@
+pingcomponents = {}
+pingcomponents["store"] = 1
+pingcomponents["test"] = "primary"
+pingcomponents["pingnumber"] = "1"
+pingcomponents["prefix"] = "IP Address"
+pingcomponents["cancelled"] = "0"
+pingcomponents["openfile"] = ""
+pingcomponents["log"] = "Empty Log"
+pingcomponents["logline"] = 0
+pingcomponents["threadkilled"] = 0
+pingcomponents["startupsuccessful"]=0
+pingcomponents["loggingwindow"] = ""
+pingcomponents["generatestats"] = 0
