@@ -40,8 +40,8 @@ def startping(store, test, pingnumber, buttondis, buttonen, prefix, options, sto
             wlog("pingthread started")
         if pingnumber == 0:
             outbox("Can't ping zero times")
-            print("Can't ping zero times")
+            #print("Can't ping zero times")
     else:
-        print('Number of pings was not a number.')
+        #print('Number of pings was not a number.')
         outbox('Number of pings was not a number.')
         return

@@ -10,6 +10,7 @@ from app import logger
 from app import outputboxprinter
 from app import pingstatsgen
 
+
 outstats = pingstatsgen.getstats
 wlog=logger.log.writelogline
 rlog=logger.log.readlog
@@ -20,9 +21,8 @@ outlogset = outputboxprinter.outlog.set
 outboxclear = outputboxprinter.outbox.clear
 outlogclear = outputboxprinter.outlog.clear
 root = tk.Tk()
-exiticon = tk.PhotoImage(file="icons\exit.png")
-starticon = tk.PhotoImage(file="icons\start.png")
-cancelicon = tk.PhotoImage(file="icons\cancel.png")
+starticon = tk.PhotoImage(file="start.png")
+cancelicon = tk.PhotoImage(file="cancel.png")
 test = tk.StringVar()
 pingnumber = tk.IntVar()
 mtu = tk.IntVar()
@@ -153,8 +153,8 @@ def buttons():
     outputboxthread2 = startasthread.T(target=statsoutputboxf2, args=[statsoutputbox])
     outputboxthread2.start()
 
-    outboxset("Testing - Sending 3 pings")
-    sp.sp("::1", "primary", "3", ping, cancelping, "IP Address", options, storetxt, "1345",
+    outboxset("Testing...")
+    sp.sp("::1", "primary", "1", ping, cancelping, "IP Address", options, storetxt, "1345",
           "4000")
 
 

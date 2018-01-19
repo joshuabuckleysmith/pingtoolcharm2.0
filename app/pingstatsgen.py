@@ -3,8 +3,7 @@ from app import pingcomponents
 from app import logger
 
 wlog=logger.log.writelogline
-wlog = print
-wlog("imported pingstatsgen")
+#wlog("imported pingstatsgen")
 
 def getstats():
     if pingcomponents.pingcomponents["generatestats"] == 1:
