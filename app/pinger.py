@@ -19,22 +19,22 @@ def pinger(store, pingnumber, primsec, buttondis, buttonen, prefix):
     pingcomponents.pingcomponents["threadkilled"] = 0
     lowmtu = pingcomponents.pingcomponents["lowmtu"]
     highmtu = pingcomponents.pingcomponents["highmtu"]
-    displayconfirmationline = "Pinging {}{} {} times".format(prefix, store, pingnumber)
+    displayconfirmationline = "Pinging {}{} {} times:".format(prefix, store, pingnumber)
     wlog("pinger is displaying confirmation line which is {}".format(displayconfirmationline))
     outlog("{}".format(datetime.now()))
     outbox(displayconfirmationline)
     outlog(displayconfirmationline)
     pingcomponents.pingcomponents["loggingwindow"] = pingcomponents.pingcomponents["loggingwindow"][0:-len(displayconfirmationline)]
     if primsec == "primary":
-        lowmtu = "-l {}".format(lowmtu)
-        if lowmtu == "-l 0":
-            lowmtu = "-l 1345"
-        pingthread = Popen("ping -n {} {} {}{} > 1\\temp{}.txt".format(pingnumber, lowmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]), shell=True)
+        lowmtu = "{}".format(lowmtu)
+        pingthread = Popen("ping -n {} -l {} {}{} > 1\\temp{}.txt".format(pingnumber, lowmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]), shell=True)
+        outputtolog = ("ping -n {} -l {} {}{}".format(pingnumber, lowmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]))
     if primsec == "secondary":
-        highmtu = "-l {}".format(highmtu)
-        if highmtu == "-l 0":
-            highmtu = "-l 4000"
-        pingthread = Popen("ping -n {} {} {}{} > 1\\temp{}.txt".format(pingnumber, highmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]), shell=True)
+        highmtu = "{}".format(highmtu)
+        pingthread = Popen("ping -n {} -l {} {}{} > 1\\temp{}.txt".format(pingnumber, highmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]), shell=True)
+        outputtolog = ("ping -n {} -l {} {}{}".format(pingnumber, highmtu, prefix, store,
+                                                                      pingcomponents.pingcomponents["UTCIdentity"]))
+    outbox(outputtolog)
     pingcomponents.pingcomponents["process"] = pingthread.pid
     wlog("printer is started in its own thread here")
     #====================Output goes to printer from here. This thread goes down to the while loop below.

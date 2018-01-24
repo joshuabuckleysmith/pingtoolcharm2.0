@@ -21,18 +21,22 @@ outlogset = outputboxprinter.outlog.set
 outboxclear = outputboxprinter.outbox.clear
 outlogclear = outputboxprinter.outlog.clear
 root = tk.Tk()
-starticon = tk.PhotoImage(file="start.png")
+starticon = tk.PhotoImage(file="start2.png")
 cancelicon = tk.PhotoImage(file="cancel.png")
 test = tk.StringVar()
 pingnumber = tk.IntVar()
-mtu = tk.IntVar()
-hmtu = tk.IntVar()
+mtu = tk.StringVar()
+hmtu = tk.StringVar()
 store = tk.StringVar()
 prefix = tk.StringVar()
+mturadio = tk.StringVar()
 prefix.set("IP Address")
 logoutput = tk.StringVar()
 storetxt = tk.Label(text="Store Number")
 wlog("vars set")
+arial = ("Arial", "10")
+consolas = ("Consolas", 8)
+arial = consolas
 options = collections.OrderedDict(
     [
         ("IP Address", ""), ("Router(dg)", "dg"),
@@ -66,29 +70,38 @@ def destroyapp():
 def buttons():
     wlog("buttons from tkwindows")
     '''creates tk window'''
-    storetxt = tk.Label(text="Store Number")  # Ping test labels for text boxes.
-    storetxt.place(x=10, y=5)
-    pingtxt = tk.Label(text="Ping Number")  # Ping test labels for text boxes.
-    pingtxt.place(x=150, y=5)
-    mtutxt = tk.Label(text="Default MTU")  # Ping test labels for text boxes.
-    mtutxt.place(x=10, y=100)
-    hmtutxt = tk.Label(text="Alternate MTU")  # Ping test labels for text boxes.
-    hmtutxt.place(x=150, y=100)
-    storeentry = tk.Entry(root, textvariable=store) # Entry box for store number for ip address
+    storetxt = tk.Label(text="Store Number", font = arial)  # Ping test labels for text boxes.
+    storetxt.place(x=10, y=10)
+    pingtxt = tk.Label(text="Ping Number", font = arial)  # Ping test labels for text boxes.
+    pingtxt.place(x=150, y=10)
+    mtutxt = tk.Label(text="Default MTU", font = arial)  # Ping test labels for text boxes.
+    mtutxt.place(x=31, y=100)
+    hmtutxt = tk.Label(text="Alternate MTU", font = arial)  # Ping test labels for text boxes.
+    hmtutxt.place(x=171, y=100)
+    storeentry = tk.Entry(root, textvariable=store, font = consolas) # Entry box for store number for ip address
     storeentry.place(x=10, y=30)
-    pingentry = tk.Entry(textvariable=pingnumber) # Entry box for ping number
+    pingentry = tk.Entry(textvariable=pingnumber, font = consolas) # Entry box for ping number
     pingentry.place(x=150, y=30)
-    mtuentry = tk.Entry(textvariable=mtu) # Entry box for mtu
-    mtuentry.place(x=10, y=120)
-    hmtuentry = tk.Entry(textvariable=hmtu) # Entry box for high mtu
-    hmtuentry.place(x=150, y=120)
+    mtuentry = tk.Entry(textvariable=mtu, font = consolas) # Entry box for mtu
+    mtuentry.place(x=10, y=125)
+    mtuentry.insert(tk.END, "1345")
+    hmtuentry = tk.Entry(textvariable=hmtu, font = consolas) # Entry box for high mtu
+    hmtuentry.place(x=150, y=125)
+    hmtuentry.insert(tk.END, "4000")
     dropout = tk.OptionMenu(root, prefix, *options) # dropdown for ping choices
+    dropout.config(font=arial)
+    dropout.nametowidget(dropout.menuname).config(font=arial)
     dropout.place(x=7, y=50)
     testbutton = tk.Checkbutton\
-        (text="Use Alternate Mtu", variable=test, onvalue="secondary",
+        (text="Use Alternate Mtu", font = arial, variable=test, onvalue="secondary",
         offvalue="primary", )                           # dropdown for mtu choices
     testbutton.deselect()
-    testbutton.place(x=80, y=150)
+    mturadiobutton = tk.Radiobutton(text="", variable=mturadio, value="primary")
+    mturadiobutton2 = tk.Radiobutton(text="", variable=mturadio, value="secondary")
+    mturadiobutton.place(x=6, y=100)
+    mturadiobutton2.place(x=146, y=100)
+    mturadiobutton.select()
+    #testbutton.place(x=80, y=150)
 
 
     #==============================================================# Runs sp command when start is clicked
@@ -98,32 +111,40 @@ def buttons():
         statsoutputbox.delete(index1=(1.0), index2=tk.END)
         outboxclear()
         outlogclear()
-        sp.sp(store.get(), test.get(), pingnumber.get(), ping, cancelping, prefix.get(), options, storetxt, mtu.get(), hmtu.get())
+        sp.sp(store.get(), mturadio.get(), pingnumber.get(), ping, cancelping, prefix.get(), options, storetxt, mtu.get(), hmtu.get())
+    ping = tk.Button(image = starticon,  relief=tk.SUNKEN, command=spf, border = "0") # Button runs SPF
+    ping.place(x=20, y=180)
 
-    ping = tk.Button(image = starticon,  command=spf, bg="white", border = "0", relief="flat") # Button runs SPF
-    ping.place(x=20, y=200)
+    def buttpress(*args):
+        ping.config(image=starticon)
+    def buttrelease(*args):
+        ping.config(image=cancelicon)
+
+    ping.bind("<ButtonPress>", buttpress)
+    ping.bind("<ButtonRelease>", buttrelease)
 
 
     # ==============================================================# Runs killthread when cancel is clicked
     def killthreadf():
         wlog("killthreadf run")
         killthread.killthread(cancelping, ping)
-
-
-    cancelping = tk.Button(image = cancelicon, command=killthreadf, bg = "white", border = "0") #Cancel button
+    cancelping = tk.Button(image = cancelicon, command=killthreadf, border = "2") #Cancel button
     cancelping['state'] = 'disabled'
-    cancelping.place(x=160, y=200)
+    #cancelping.place(x=160, y=180)
+
+
+    #===============================================================
     wlog("loggingwindow run")
     statsoutputbox = tk.Text(root, height=5, width=65, font="Consolas 8")
     statsoutputbox.place(x=300, y=15)
     statsoutputbox.see("end")
     outputboxx = 300
     outputboxy = 100
-    outputbox = tk.Text(root, height=16, width=65, font="Consolas 8")
+    outputbox = tk.Text(root, height=14, width=65, font="Consolas 8")
     outputbox.place(x=300, y=100)
     outputbox.see("end")
     scrol2 = tk.Scrollbar(root, command=outputbox.yview, )
-    scrol2.place(x=outputboxx+378, y=outputboxy, height=212)
+    scrol2.place(x=outputboxx+378, y=outputboxy, height=186)
 
 
     #========================================outputs realtime ping data
@@ -224,5 +245,5 @@ def buttons():
     textdaemon.setDaemon(True)
     textdaemon.start()
     root.resizable(width=False, height=False)
-    root.geometry('{}x{}'.format(710,330))
+    root.geometry('{}x{}'.format(710,310))
     root.mainloop()
