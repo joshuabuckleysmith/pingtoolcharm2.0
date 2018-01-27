@@ -35,6 +35,7 @@ def pinger(store, pingnumber, primsec, buttondis, buttonen, prefix):
         outputtolog = ("ping -n {} -l {} {}{}".format(pingnumber, highmtu, prefix, store,
                                                                       pingcomponents.pingcomponents["UTCIdentity"]))
     outbox(outputtolog)
+    pingcomponents.pingcomponents["pingbutton"].config(state="active")
     pingcomponents.pingcomponents["process"] = pingthread.pid
     wlog("printer is started in its own thread here")
     #====================Output goes to printer from here. This thread goes down to the while loop below.
@@ -45,6 +46,6 @@ def pinger(store, pingnumber, primsec, buttondis, buttonen, prefix):
         threadalive2 = bool(outputthread.is_alive())
         sleep(0.2)
         if threadalive2 == False:
-            buttondis['state'] = 'normal'  # reenables buttons when ping completes.
-            buttonen['state'] = 'disabled'
+            #buttondis['state'] = 'normal'  # reenables buttons when ping completes.
+            #buttonen['state'] = 'disabled'
             break

@@ -8,6 +8,7 @@ wlog=logger.log.writelogline
 def sp(a, b, c, d, e, f, g, h, i, j):
     wlog("sp defined")
     '''a store.get(), b test.get(), c pingnumber.get(), d ping, e cancelping, f prefix.get(), g options, h storetxt'''
+    c=int(c)
     pingcomponents.pingcomponents["store"] = a
     pingcomponents.pingcomponents["test"] = b
     pingcomponents.pingcomponents["pingnumber"] = c

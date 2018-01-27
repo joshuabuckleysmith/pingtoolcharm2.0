@@ -11,3 +11,6 @@ pingcomponents["threadkilled"] = 0
 pingcomponents["startupsuccessful"]=0
 pingcomponents["loggingwindow"] = ""
 pingcomponents["generatestats"] = 0
+pingcomponents["pingrunningforicons"] = False
+pingcomponents["startreleasedicon"] = ""
+pingcomponents["pingbutton"] = ""

@@ -11,8 +11,15 @@ from app import logger
 from app import outputboxprinter
 from app import pingstatsgen
 
+
+root = tk.Tk()
 style = ttk.Style()
 style.theme_use('clam')
+style.configure('Gray.TRadiobutton',    # First argument is the name of style. Needs to end with: .TRadiobutton
+        background='#EFEFEF',         # Setting background to our specified color above
+        foreground='#FFFFFF')
+
+
 outstats = pingstatsgen.getstats
 wlog=logger.log.writelogline
 rlog=logger.log.readlog
@@ -22,12 +29,21 @@ outlogget = outputboxprinter.outlog.get
 outlogset = outputboxprinter.outlog.set
 outboxclear = outputboxprinter.outbox.clear
 outlogclear = outputboxprinter.outlog.clear
-root = tk.Tk()
+
 startreleasedicon = tk.PhotoImage(file="startenabled.png")
-startpressedicon = tk.PhotoImage(file="startdepressed.png")
-cancelreleasedicon = tk.PhotoImage(file="cancel.png")
+startrollovericon = tk.PhotoImage(file="startrollover.png")
+startpressedicon = tk.PhotoImage(file="startclicked.png")
+
+cancelreleasedicon = tk.PhotoImage(file="cancelenabled.png")
+cancelrollovericon = tk.PhotoImage(file="cancelrollover.png")
+cancelpressedicon = tk.PhotoImage(file="cancelclicked.png")
+
+pingcomponents.pingcomponents["startreleasedicon"] = startreleasedicon
+
+
 test = tk.StringVar()
 pingnumber = tk.IntVar()
+pingnumber.set(4)
 mtu = tk.StringVar()
 hmtu = tk.StringVar()
 store = tk.StringVar()
@@ -38,10 +54,11 @@ logoutput = tk.StringVar()
 storetxt = tk.Label(text="Store Number")
 wlog("vars set")
 arial = ("Arial", "10")
-consolas = ("Consolas", 8)
+consolas = ("Fira Code", 8)
 arial = consolas
-bgcolor = "#000000"
-fgcolor = "#EEEEEE"
+bgcolor = "#FFFFFF"
+fgcolor = "#000000"
+
 options = collections.OrderedDict(
     [
         ("Router(dg)", "dg"),
@@ -79,79 +96,114 @@ def destroyapp():
 def buttons():
     wlog("buttons from tkwindows")
     '''creates tk window'''
-    storetxt = ttk.Label(text="Store Number", font = arial, bg=bgcolor, fg=fgcolor)  # Ping test labels for text boxes.
+    storetxt = tk.Label(text="Store Number")  # Ping test labels for text boxes.
     storetxt.place(x=10, y=10)
-    pingtxt = tk.Label(text="Ping Number", font = arial, bg=bgcolor, fg=fgcolor)  # Ping test labels for text boxes.
-    pingtxt.place(x=150, y=10)
-    mtutxt = tk.Label(text="Default MTU", font = arial, bg=bgcolor, fg=fgcolor)  # Ping test labels for text boxes.
-    mtutxt.place(x=30, y=94)
-    hmtutxt = tk.Label(text="Alternate MTU", font = arial, bg=bgcolor, fg=fgcolor)  # Ping test labels for text boxes.
-    hmtutxt.place(x=170, y=94)
-    storeentry = tk.Entry(root, textvariable=store, font = consolas, bg=bgcolor, fg=fgcolor) # Entry box for store number for ip address
+    pingtxt = tk.Label(text="Ping Number")  # Ping test labels for text boxes.
+    pingtxt.place(x=100, y=10)
+    mtutxt = tk.Label(text="Default MTU")  # Ping test labels for text boxes.
+    mtutxt.place(x=9, y=94)
+    hmtutxt = tk.Label(text="Alternate MTU")  # Ping test labels for text boxes.
+    hmtutxt.place(x=9, y=144)
+    storeentry = ttk.Entry(root, textvariable=store) # Entry box for store number for ip address
+    storeentry.insert(tk.END, "04444")
+    storeentry.config(width=12)
     storeentry.place(x=10, y=30)
-    pingentry = tk.Entry(textvariable=pingnumber, font = consolas, bg=bgcolor, fg=fgcolor) # Entry box for ping number
-    pingentry.place(x=150, y=30)
-    mtuentry = tk.Entry(textvariable=mtu, font = consolas, bg=bgcolor, fg=fgcolor) # Entry box for mtu
-    mtuentry.place(x=10, y=115)
+    pingentry = ttk.Entry(textvariable=pingnumber) # Entry box for ping number
+    pingentry.config(width=11)
+    pingentry.place(x=110, y=30)
+    mtuentry = ttk.Entry(textvariable=mtu) # Entry box for mtu
+    mtuentry.config(width=6)
+    mtuentry.place(x=35, y=115)
     mtuentry.insert(tk.END, "1345")
-    hmtuentry = tk.Entry(textvariable=hmtu, font = consolas, bg=bgcolor, fg=fgcolor) # Entry box for high mtu
-    hmtuentry.place(x=150, y=115)
+    hmtuentry = ttk.Entry(textvariable=hmtu) # Entry box for high mtu
+    hmtuentry.config(width=6)
+    hmtuentry.place(x=35, y=165)
     hmtuentry.insert(tk.END, "4000")
-    dropout = tk.OptionMenu(root, prefix, *options) # dropdown for ping choices
-    dropout.config(font=arial, bg=bgcolor, fg=fgcolor)
-    dropout.nametowidget(dropout.menuname).config(font=arial, bg=bgcolor, fg=fgcolor)
-    dropout.place(x=7, y=50)
-    mturadiobutton = tk.Radiobutton(text="", border=0, variable=mturadio, value="primary", bg=bgcolor, fg=fgcolor)
-    mturadiobutton2 = tk.Radiobutton(text="", border=0, variable=mturadio, value="secondary", bg=bgcolor, fg=fgcolor)
-    mturadiobutton.place(x=9, y=94)
-    mturadiobutton2.place(x=149, y=94)
-    mturadiobutton.select()
+    dropout = ttk.OptionMenu(root, prefix, *options) # dropdown for ping choices
+    dropout.config(width=23)
+    #dropout.nametowidget(dropout.menuname).config(font=arial)
+    dropout.place(x=10, y=52)
+    mturadiobutton = ttk.Radiobutton(text="", variable=mturadio, value="primary", style="Gray.TRadiobutton")
+    mturadiobutton2 = ttk.Radiobutton(text="", variable=mturadio, value="secondary", style="Gray.TRadiobutton")
+    mturadiobutton.place(x=10, y=114)
+    mturadiobutton2.place(x=10, y=164)
+    mturadio.set("primary")
     #testbutton.place(x=80, y=150)
 
 
     #==============================================================# Runs sp command when start is clicked
     def spf(*args):
         wlog("spf run")
+        pingcomponents.pingcomponents["pingrunningforicons"] = True
+        ping.config(state="disabled")
+        ping.config(image=cancelreleasedicon)
         outputbox.delete(index1=(1.0), index2=tk.END)
         statsoutputbox.delete(index1=(1.0), index2=tk.END)
         outboxclear()
         outlogclear()
+        ping.config(command=killthreadf)
         sp.sp(store.get(), mturadio.get(), pingnumber.get(), ping, cancelping, prefix.get(), options, storetxt, mtu.get(), hmtu.get())
 
+    pingcomponents.pingcomponents["pingfunction"]=spf
 
-    ping = tk.Button(image=startreleasedicon, relief = tk.SUNKEN, border="0", command=spf, bg=bgcolor, fg=fgcolor)  # Button runs SPF
-    ping.place(x=0, y=130)
 
+    ping = tk.Button(image=startreleasedicon, command=spf, relief='sunken', border=0)  # Button runs SPF
+    ping.place(x=88, y=94)
+    pingcomponents.pingcomponents["pingbutton"] = ping
+
+    def buttenter(*args):
+        if pingcomponents.pingcomponents["pingrunningforicons"] == False:
+            ping.config(image=startrollovericon)
+        if pingcomponents.pingcomponents["pingrunningforicons"] == True:
+            ping.config(image=cancelrollovericon)
+    def buttleave(*args):
+        if pingcomponents.pingcomponents["pingrunningforicons"] == False:
+            ping.config(image=startreleasedicon)
+        if pingcomponents.pingcomponents["pingrunningforicons"] == True:
+            ping.config(image=cancelreleasedicon)
     def buttpress(*args):
-        ping.config(image=startpressedicon)
+        if pingcomponents.pingcomponents["pingrunningforicons"] == False:
+            ping.config(image=startpressedicon)
+        if pingcomponents.pingcomponents["pingrunningforicons"] == True:
+            ping.config(image=cancelpressedicon)
     def buttrelease(*args):
-        ping.config(image=startreleasedicon)
+        if pingcomponents.pingcomponents["pingrunningforicons"] == False:
+            ping.config(image=startreleasedicon)
+        if pingcomponents.pingcomponents["pingrunningforicons"] == True:
+            ping.config(image=cancelreleasedicon)
+
 
     ping.bind("<ButtonPress>", buttpress)
     ping.bind("<ButtonRelease>", buttrelease)
+    ping.bind("<Enter>", buttenter)
+    ping.bind("<Leave>", buttleave)
 
 
     # ==============================================================# Runs killthread when cancel is clicked
     def killthreadf():
+        ping.config(image=cancelpressedicon)
+        pingcomponents.pingcomponents["pingbutton"].config(state="disabled")
+        ping.config(command=spf)
         wlog("killthreadf run")
-        killthread.killthread(cancelping, ping)
-    cancelping = tk.Button(image = cancelreleasedicon, command=killthreadf, border ="2") #Cancel button
+        killthread.killthread(ping)
+    cancelping = ttk.Button(image = cancelreleasedicon, command=killthreadf) #Cancel button
     cancelping['state'] = 'disabled'
+    pingcomponents.pingcomponents["killfunction"] = killthreadf
     #cancelping.place(x=160, y=180)
 
 
     #===============================================================
     wlog("loggingwindow run")
     statsoutputbox = tk.Text(root, height=5, width=65, font="Consolas 8", bg=bgcolor)
-    statsoutputbox.place(x=300, y=15)
+    statsoutputbox.place(x=200, y=15)
     statsoutputbox.see("end")
     outputboxx = 300
     outputboxy = 100
-    outputbox = tk.Text(root, height=10, width=65, font="Consolas 8", bg=bgcolor)
-    outputbox.place(x=300, y=100)
+    outputbox = tk.Text(root, height=7, width=65, font="Consolas 8", bg=bgcolor)
+    outputbox.place(x=200, y=100)
     outputbox.see("end")
-    scrol2 = tk.Scrollbar(root, command=outputbox.yview, bg=bgcolor)
-    scrol2.place(x=outputboxx+378, y=outputboxy, height=134)
+    scrol2 = ttk.Scrollbar(root, command=outputbox.yview)
+    scrol2.place(x=outputboxx+378, y=outputboxy, height=104)
 
 
     #========================================outputs realtime ping data
@@ -180,7 +232,7 @@ def buttons():
     outputboxthread.start()
     outputboxthread2 = startasthread.T(target=statsoutputboxf2, args=[statsoutputbox])
     outputboxthread2.start()
-
+    #====================================runs a quick self test
     outboxset("Testing...")
     sp.sp("::1", "primary", "1", ping, cancelping, "IP Address", options, storetxt, "1345",
           "4000")
@@ -192,7 +244,7 @@ def buttons():
     loggingwindow = tk.Text(logout, height=40, width=80, font="Consolas 10")
     loggingwindow.grid(row=0, column=0)
     loggingwindow.see("end")
-    scrollb = tk.Scrollbar(logout, command=loggingwindow.yview, bg=bgcolor)
+    scrollb = ttk.Scrollbar(logout, command=loggingwindow.yview)
     loggingwindow['yscrollcommand'] = scrollb.set
     scrollb.grid(row=0, column=1, sticky='nsew')
 
@@ -252,6 +304,6 @@ def buttons():
     textdaemon.setDaemon(True)
     textdaemon.start()
     root.resizable(width=False, height=False)
-    root.geometry('{}x{}'.format(710,260))
-    root.configure(bg=bgcolor)
+    root.geometry('{}x{}'.format(610,200))
+    #root.configure(bg=bgcolor)
     root.mainloop()

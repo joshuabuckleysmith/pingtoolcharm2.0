@@ -103,6 +103,10 @@ def printer(monitoredthread, store, prefix):
                 pingcomponents.pingcomponents["outputbox"].insert(tk.END, "Ready")
                 pingcomponents.pingcomponents["outputbox"].insert(tk.END, "\n")
             os.system("del 1\\temp{}.txt > nul".format(pingcomponents.pingcomponents["UTCIdentity"]))
+            pingcomponents.pingcomponents["pingrunningforicons"] = False
+            pingcomponents.pingcomponents["pingbutton"].config(state="active")
+            pingcomponents.pingcomponents["pingbutton"].config(image=pingcomponents.pingcomponents["startreleasedicon"])
+            pingcomponents.pingcomponents["pingbutton"].config(command=pingcomponents.pingcomponents["pingfunction"])
             pingcomponents.pingcomponents["generatestats"] = 0
             wlog("output thread has ended, no action after here?")
             break

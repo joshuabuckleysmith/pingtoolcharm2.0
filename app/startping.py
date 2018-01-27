@@ -33,8 +33,8 @@ def startping(store, test, pingnumber, buttondis, buttonen, prefix, options, sto
                 return
         if pingnumber != 0:
             wlog("ping number was {}".format(pingnumber))
-            buttonen['state'] = 'normal'
-            buttondis['state'] = 'disabled'
+            #buttonen['state'] = 'normal'
+            #buttondis['state'] = 'disabled'
             pingthread = T(target=pinger.pinger, args=[store, pingnumber, test, buttondis, buttonen, prefix])
             pingthread.start()
             wlog("pingthread started")
