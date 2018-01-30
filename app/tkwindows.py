@@ -30,13 +30,12 @@ outlogset = outputboxprinter.outlog.set
 outboxclear = outputboxprinter.outbox.clear
 outlogclear = outputboxprinter.outlog.clear
 
-startreleasedicon = tk.PhotoImage(file="startenabled.png")
-startrollovericon = tk.PhotoImage(file="startrollover.png")
-startpressedicon = tk.PhotoImage(file="startclicked.png")
-
-cancelreleasedicon = tk.PhotoImage(file="cancelenabled.png")
-cancelrollovericon = tk.PhotoImage(file="cancelrollover.png")
-cancelpressedicon = tk.PhotoImage(file="cancelclicked.png")
+startreleasedicon = tk.PhotoImage(file="SE.png")
+startrollovericon = tk.PhotoImage(file="SE.png")
+startpressedicon = tk.PhotoImage(file="SR.png")
+cancelreleasedicon = tk.PhotoImage(file="CE.png")
+cancelrollovericon = tk.PhotoImage(file="CE.png")
+cancelpressedicon = tk.PhotoImage(file="CR.png")
 
 pingcomponents.pingcomponents["startreleasedicon"] = startreleasedicon
 
@@ -55,6 +54,7 @@ storetxt = tk.Label(text="Store Number")
 wlog("vars set")
 arial = ("Arial", "10")
 consolas = ("Fira Code", 8)
+consolas = ("Sans", 8)
 arial = consolas
 bgcolor = "#FFFFFF"
 fgcolor = "#000000"
@@ -97,37 +97,42 @@ def buttons():
     wlog("buttons from tkwindows")
     '''creates tk window'''
     storetxt = tk.Label(text="Store Number")  # Ping test labels for text boxes.
-    storetxt.place(x=10, y=10)
+    storetxt.place(x=8, y=10)
     pingtxt = tk.Label(text="Ping Number")  # Ping test labels for text boxes.
-    pingtxt.place(x=100, y=10)
-    mtutxt = tk.Label(text="Default MTU")  # Ping test labels for text boxes.
-    mtutxt.place(x=9, y=94)
-    hmtutxt = tk.Label(text="Alternate MTU")  # Ping test labels for text boxes.
-    hmtutxt.place(x=9, y=144)
+    pingtxt.place(x=106, y=10)
+    mtutxt = tk.Label(text="MTU")  # Ping test labels for text boxes.
+    hmtutxt = tk.Label(text="MTU")  # Ping test labels for text boxes.
+
     storeentry = ttk.Entry(root, textvariable=store) # Entry box for store number for ip address
     storeentry.insert(tk.END, "04444")
     storeentry.config(width=12)
     storeentry.place(x=10, y=30)
     pingentry = ttk.Entry(textvariable=pingnumber) # Entry box for ping number
     pingentry.config(width=11)
-    pingentry.place(x=110, y=30)
+    pingentry.place(x=109, y=30)
+
     mtuentry = ttk.Entry(textvariable=mtu) # Entry box for mtu
     mtuentry.config(width=6)
-    mtuentry.place(x=35, y=115)
     mtuentry.insert(tk.END, "1345")
     hmtuentry = ttk.Entry(textvariable=hmtu) # Entry box for high mtu
     hmtuentry.config(width=6)
-    hmtuentry.place(x=35, y=165)
     hmtuentry.insert(tk.END, "4000")
+    mturadiobutton = ttk.Radiobutton(text="", variable=mturadio, value="primary", style="Gray.TRadiobutton")
+    highmtubutton = ttk.Radiobutton(text="", variable=mturadio, value="secondary", style="Gray.TRadiobutton")
+
+    mtuentry.place(x=10, y=108)  # right high
+    hmtuentry.place(x=10, y=128) #right low
+    mtutxt.place(x=8, y=88)
+    #hmtutxt.place(x=9, y=145)
+    mturadiobutton.place(x=52, y=108) #left high
+    highmtubutton.place(x=52, y=128) #left low
+    mturadio.set("primary")
+
     dropout = ttk.OptionMenu(root, prefix, *options) # dropdown for ping choices
     dropout.config(width=23)
     #dropout.nametowidget(dropout.menuname).config(font=arial)
     dropout.place(x=10, y=52)
-    mturadiobutton = ttk.Radiobutton(text="", variable=mturadio, value="primary", style="Gray.TRadiobutton")
-    mturadiobutton2 = ttk.Radiobutton(text="", variable=mturadio, value="secondary", style="Gray.TRadiobutton")
-    mturadiobutton.place(x=10, y=114)
-    mturadiobutton2.place(x=10, y=164)
-    mturadio.set("primary")
+
     #testbutton.place(x=80, y=150)
 
 
@@ -136,6 +141,7 @@ def buttons():
         wlog("spf run")
         pingcomponents.pingcomponents["pingrunningforicons"] = True
         ping.config(state="disabled")
+
         ping.config(image=cancelreleasedicon)
         outputbox.delete(index1=(1.0), index2=tk.END)
         statsoutputbox.delete(index1=(1.0), index2=tk.END)
@@ -148,7 +154,7 @@ def buttons():
 
 
     ping = tk.Button(image=startreleasedicon, command=spf, relief='sunken', border=0)  # Button runs SPF
-    ping.place(x=88, y=94)
+    ping.place(x=108, y=85)
     pingcomponents.pingcomponents["pingbutton"] = ping
 
     def buttenter(*args):
@@ -304,6 +310,6 @@ def buttons():
     textdaemon.setDaemon(True)
     textdaemon.start()
     root.resizable(width=False, height=False)
-    root.geometry('{}x{}'.format(610,200))
+    root.geometry('{}x{}'.format(610,210))
     #root.configure(bg=bgcolor)
     root.mainloop()
