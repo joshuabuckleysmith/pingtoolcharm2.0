@@ -42,12 +42,14 @@ pingcomponents.pingcomponents["startreleasedicon"] = startreleasedicon
 
 test = tk.StringVar()
 pingnumber = tk.IntVar()
-pingnumber.set(4)
+pingnumber.set(200)
 mtu = tk.StringVar()
 hmtu = tk.StringVar()
 store = tk.StringVar()
 prefix = tk.StringVar()
 mturadio = tk.StringVar()
+rate = tk.IntVar()
+rate.set(3)
 prefix.set("Router(dg)")
 logoutput = tk.StringVar()
 storetxt = tk.Label(text="Store Number")
@@ -61,14 +63,15 @@ fgcolor = "#000000"
 
 options = collections.OrderedDict(
     [
+
+        ("IP Address", ""),
         ("Router(dg)", "dg"),
         ("Switch US(ussw010)", "ussw010"),
         ("Switch Canada(casw010)", "casw010"),
         ("Register US(usrg010)", "usrg010"),
         ("Register Canada(carg010)", "carg010"),
         ("Workstation(mws)", "mws"),
-        ("FoH Switch(ussw030)", "ussw030"),
-        ("IP Address", "")
+        ("FoH Switch(ussw030)", "ussw030")
     ]
 )
 
@@ -104,7 +107,7 @@ def buttons():
     hmtutxt = tk.Label(text="MTU")  # Ping test labels for text boxes.
 
     storeentry = ttk.Entry(root, textvariable=store) # Entry box for store number for ip address
-    storeentry.insert(tk.END, "04444")
+    storeentry.insert(tk.END, "::1")
     storeentry.config(width=12)
     storeentry.place(x=10, y=30)
     pingentry = ttk.Entry(textvariable=pingnumber) # Entry box for ping number
@@ -148,7 +151,12 @@ def buttons():
         outboxclear()
         outlogclear()
         ping.config(command=killthreadf)
-        sp.sp(store.get(), mturadio.get(), pingnumber.get(), ping, cancelping, prefix.get(), options, storetxt, mtu.get(), hmtu.get())
+        ratesent = rate.get()
+        if ratesent == 3:
+            ratesent = 5
+        if ratesent == 4:
+            ratesent = 30
+        sp.sp(store.get(), mturadio.get(), pingnumber.get(), ping, cancelping, prefix.get(), options, storetxt, mtu.get(), hmtu.get(), ratesent)
 
     pingcomponents.pingcomponents["pingfunction"]=spf
 
@@ -171,7 +179,9 @@ def buttons():
         if pingcomponents.pingcomponents["pingrunningforicons"] == False:
             ping.config(image=startpressedicon)
         if pingcomponents.pingcomponents["pingrunningforicons"] == True:
-            ping.config(image=cancelpressedicon)
+            state = str(ping['state'])
+            if state == 'active':
+                ping.config(image=cancelpressedicon)
     def buttrelease(*args):
         if pingcomponents.pingcomponents["pingrunningforicons"] == False:
             ping.config(image=startreleasedicon)
@@ -191,10 +201,11 @@ def buttons():
         pingcomponents.pingcomponents["pingbutton"].config(state="disabled")
         ping.config(command=spf)
         wlog("killthreadf run")
-        killthread.killthread(ping)
+        killthread.killthread(ping, pingcomponents.pingcomponents["rate"])
     cancelping = ttk.Button(image = cancelreleasedicon, command=killthreadf) #Cancel button
     cancelping['state'] = 'disabled'
     pingcomponents.pingcomponents["killfunction"] = killthreadf
+    pingcomponents.pingcomponents["cancelbutton"] = cancelping
     #cancelping.place(x=160, y=180)
 
 
@@ -212,6 +223,27 @@ def buttons():
     scrol2.place(x=outputboxx+378, y=outputboxy, height=104)
 
 
+    #================================================================== rate slider
+    ratetext=tk.StringVar()
+    ratetext.set("1")
+    rateslider = tk.Scale(root, from_=1, to=4, variable=rate, showvalue = 0, orient=tk.HORIZONTAL)
+    def rateupdate():
+        while True:
+            if rate.get()==1:
+                ratetext.set("Slow")
+            if rate.get()==2:
+                ratetext.set("Medium")
+            if rate.get()==3:
+                ratetext.set("Fast")
+            if rate.get()==4:
+                ratetext.set("Very Fast")
+            sleep(0.1)
+    ratelabel = tk.Label(root, textvariable=ratetext)
+    ratelabel.place(x=20, y=160)
+    rateslider.place(x=20, y=180)
+    startasthread.startasthread(rateupdate)
+
+
     #========================================outputs realtime ping data
     def outputboxf(outputbox):
         while True:
@@ -219,7 +251,7 @@ def buttons():
             if a != "":
                 outputbox.insert(tk.END, a)
                 outputbox.see(tk.END)
-            sleep(0.5)
+            sleep(0.1)
 
     def statsoutputboxf2(outputbox2): # outputs realtime ping statistics
         b = ""
@@ -230,7 +262,7 @@ def buttons():
                     outputbox2.delete(index1=(1.0), index2=tk.END)
                     outputbox2.insert(tk.END, a)
                     b = a
-            sleep(0.5)
+            sleep(0.1)
 
     pingcomponents.pingcomponents["statsoutputbox"] = statsoutputbox
     pingcomponents.pingcomponents["outputbox"] = outputbox
@@ -240,8 +272,11 @@ def buttons():
     outputboxthread2.start()
     #====================================runs a quick self test
     outboxset("Testing...")
+
+
     sp.sp("::1", "primary", "1", ping, cancelping, "IP Address", options, storetxt, "1345",
-          "4000")
+          "4000", 3)
+
 
 
     #================================================================================== Logging window

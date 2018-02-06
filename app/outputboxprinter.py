@@ -11,6 +11,8 @@ class Outbox:
     def get(self):
         a = self.boxoutput
         self.boxoutput = ""
+        if a != "":
+            print("outbox {}".format(a))
         wlog("outbox returned a {}".format(a))
         return a
 

@@ -5,20 +5,19 @@ from app import logger
 wlog=logger.log.writelogline
 #wlog("imported pingstatsgen")
 
-def getstats():
-    if pingcomponents.pingcomponents["generatestats"] == 1:
-        try:
-            openfile = open("1\\temp{}.txt".format(pingcomponents.pingcomponents["UTCIdentity"]), 'r')
-        except:
-            return ""
+def getstats(threadnumber=1):
+    try:
+        if pingcomponents.pingcomponents["generatestats{}".format(threadnumber)] == 1:
+            openstring = ""
+            try:
+                for i in range(1, (pingcomponents.pingcomponents["threadcount"])+1):
+                    openfile = open("1\\temp{}{}.txt".format((pingcomponents.pingcomponents["UTCIdentity"]), i), 'r')
+                    openstring += openfile.read()
+                    openfile.close()
+            except:
+                return ""
         store = pingcomponents.pingcomponents["store"]
-        #wlog("store for stats was {}".format(store))
-        #wlog("pingstatsgen starting, open file was opened OK")
-        openstring = openfile.read()
-        #wlog("pingstatsgenopenstring = {}".format(openstring))
         openfile.close()
-        #wlog("pingstatsgenclosed openfile")
-        #wlog("pingstatsgen reading openfile yields {}".format(openstring))
         sent_total = 0
         received_total = 0
         lost_total = 0
@@ -77,4 +76,6 @@ def getstats():
             'Ping statistics for {}:\nPackets: Sent = {}, Received = {}, Lost = {} ({}% loss),\nApproximate round trip times in milli-seconds:\nMinimum = {}ms, Maximum = {}ms, Average = {}ms'.format(
                 store, sent_total, received_total, lost_total, loss_total, mintime, maxtime, avetime))
         return stats
+    except:
+        return ""
     return ""

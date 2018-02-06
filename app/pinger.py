@@ -1,4 +1,5 @@
 from subprocess import Popen
+import math
 from time import sleep
 from app import logger
 from app import outputboxprinter
@@ -12,40 +13,70 @@ wlog("imported pinger")
 
 from app import printer, startasthread, pingcomponents
 
-def pinger(store, pingnumber, primsec, buttondis, buttonen, prefix):
+def pinger(store, pingnumber, primsec, buttondis, buttonen, prefix, rate):
+    actualpingnumber = pingnumber
+    pingnumber = 1
     '''Takes a store number, index as INT, primsec as STRING sets primary or secondary test'''
     wlog("pinger starting")
     wlog("resetting killed thread tracking to 0")
-    pingcomponents.pingcomponents["threadkilled"] = 0
+    pingcomponents.pingcomponents["threadskilled"] = 0
     lowmtu = pingcomponents.pingcomponents["lowmtu"]
     highmtu = pingcomponents.pingcomponents["highmtu"]
     displayconfirmationline = "Pinging {}{} {} times:".format(prefix, store, pingnumber)
     wlog("pinger is displaying confirmation line which is {}".format(displayconfirmationline))
+    if pingcomponents.pingcomponents["startupsuccessful"] == 0:
+        outlog("============Log=============")
     outlog("{}".format(datetime.now()))
-    outbox(displayconfirmationline)
-    outlog(displayconfirmationline)
+    if pingcomponents.pingcomponents["startupsuccessful"] == 0:
+        outlog("============================")
+    if pingcomponents.pingcomponents["startupsuccessful"] == 1:
+        outbox(displayconfirmationline)
+        outlog(displayconfirmationline)
     pingcomponents.pingcomponents["loggingwindow"] = pingcomponents.pingcomponents["loggingwindow"][0:-len(displayconfirmationline)]
+
+
     if primsec == "primary":
-        lowmtu = "{}".format(lowmtu)
-        pingthread = Popen("ping -n {} -l {} {}{} > 1\\temp{}.txt".format(pingnumber, lowmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]), shell=True)
-        outputtolog = ("ping -n {} -l {} {}{}".format(pingnumber, lowmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]))
+        mtu = "{}".format(lowmtu)
     if primsec == "secondary":
-        highmtu = "{}".format(highmtu)
-        pingthread = Popen("ping -n {} -l {} {}{} > 1\\temp{}.txt".format(pingnumber, highmtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]), shell=True)
-        outputtolog = ("ping -n {} -l {} {}{}".format(pingnumber, highmtu, prefix, store,
-                                                                      pingcomponents.pingcomponents["UTCIdentity"]))
+        mtu = "{}".format(highmtu)
+
+    pingthreads={}
+    outputtolog = (
+    "ping -n {} -l {} {}{}".format(pingnumber, mtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]))
     outbox(outputtolog)
+    print("actual number {}".format(actualpingnumber))
+    if actualpingnumber/rate < 1:
+        rate = actualpingnumber
+    pingperthread = actualpingnumber/rate
+    a, b = math.modf(pingperthread)
+    print("a = {}, b = {}".format(a, b))
+    remainingpings = round(a*rate)
+    print("remaining pings = {}".format(remainingpings))
+    pingperthreaddict = {}
+    for i in range(1, rate+1):
+        pingperthreaddict["{}".format(i)] = b
+        if remainingpings > 0:
+            pingperthreaddict["{}".format(i)] += 1
+            remainingpings -= 1
+    print("pingperthread number {}".format(pingperthread))
+    print(pingperthreaddict["{}".format(1)])
+    pingcomponents.pingcomponents["threadcount"] = rate
+
+    for i in range(1, rate+1):
+        print("creating thread {}".format(i))
+        print('ping per thread in thread {} is {}'.format(pingperthreaddict[str(i)],pingperthreaddict[str(i)]))
+        pingthreads[str(i)] = Popen("ping -n {} -l {} {}{} > 1\\temp{}.txt".format(pingperthreaddict[str(i)], mtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]+str(i)), shell=True)
+        pingcomponents.pingcomponents["process{}".format(i)] = pingthreads[str(i)].pid
+        pingcomponents.pingcomponents["generatestats{}".format(i)] = 1
+        outputthread = startasthread.T(target=printer.printer, args=[pingthreads[str(i)], store, prefix, i, rate])
+        outputthread.start()
+        sleep(1/rate)
+
     pingcomponents.pingcomponents["pingbutton"].config(state="active")
-    pingcomponents.pingcomponents["process"] = pingthread.pid
+    if pingcomponents.pingcomponents["startupsuccessful"] == 0:
+        pingcomponents.pingcomponents["pingbutton"].config(state="disabled")
+        pingcomponents.pingcomponents["cancelbutton"].config(state="disabled")
+
     wlog("printer is started in its own thread here")
     #====================Output goes to printer from here. This thread goes down to the while loop below.
-    outputthread = startasthread.T(target=printer.printer, args=[pingthread, store, prefix])
-    outputthread.start()
-    wlog("output thread started, this is started in printer, pinger now just wait for the thread to end.")
-    while True:
-        threadalive2 = bool(outputthread.is_alive())
-        sleep(0.2)
-        if threadalive2 == False:
-            #buttondis['state'] = 'normal'  # reenables buttons when ping completes.
-            #buttonen['state'] = 'disabled'
-            break
+
