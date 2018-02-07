@@ -49,7 +49,7 @@ store = tk.StringVar()
 prefix = tk.StringVar()
 mturadio = tk.StringVar()
 rate = tk.IntVar()
-rate.set(3)
+rate.set(1)
 prefix.set("")
 logoutput = tk.StringVar()
 storetxt = tk.Label(text="Store Number")
@@ -275,7 +275,7 @@ def buttons():
 
 
     sp.sp("::1", "primary", "1", ping, cancelping, "IP or Name", options, storetxt, "1345",
-          "4000", 3)
+          "4000", 1)
 
 
 
