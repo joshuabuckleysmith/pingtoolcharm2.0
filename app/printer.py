@@ -28,14 +28,14 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
         if pingcomponents.pingcomponents["threadskilled"] == 0:
             wlog("printer is attempting to open the temp file")
             x=0
-            while x <=10:
+            while x <=20:
                 try:
                     print(x)
                     openfile = open("1\\temp{}.txt".format(pingcomponents.pingcomponents["UTCIdentity"]+str(threadnumber)), 'r')
                     break
                 except:
                     print(x)
-                sleep(0.3)
+                sleep(0.5)
                 x=x+1
             if x == 11:
                 outboxset("parser failure, abandoning operation. Output is \n{}".format(outstats()))
