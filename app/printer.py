@@ -116,6 +116,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
                     completedthreads += 1
                     print("completedthreads = {}, range was = {}".format(completedthreads, rate))
                     if completedthreads == rate:
+                        pingcomponents.pingcomponents["threadscomplete"] = 1
                         #print("comp threads = range")
                         pingcomponents.pingcomponents["pingrunningforicons"] = False
                         pingcomponents.pingcomponents["pingbutton"].config(state="active")
@@ -127,7 +128,6 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
                         outlogset("===================")
                         outboxset("Ping Complete\n")
                         outlogset(a)
-                        pingcomponents.pingcomponents["threadscomplete"] = 1
                         break
 
             break

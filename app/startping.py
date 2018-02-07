@@ -17,6 +17,7 @@ def startping(store, test, pingnumber, buttondis, buttonen, prefix, options, sto
     store = pingcomponents.pingcomponents["store"]
     pingnumber = pingcomponents.pingcomponents["pingnumber"]
     prefix = options[pingcomponents.pingcomponents["prefix"]]
+
     wlog("testing ping no")
     if testpingnumber.testpingnumber(pingnumber) == True:
         wlog("ping no tested true")

@@ -15,8 +15,10 @@ wlog("imported killthread")
 def killthread(button, rate):
     pingcomponents.pingcomponents["pingbutton"].config(state="disabled")
     button.config(command=killthread)
-    outlog(stats())
     UTC = pingcomponents.pingcomponents["UTCIdentity"]
+    outlog("\nPing Cancelled\n")
+    outlog(stats())
+    outlog("\n===================")
     def endprocesses():
         for i in range(1, rate+1):
             pingcomponents.pingcomponents["generatestats{}".format(i)] = 0
@@ -24,7 +26,7 @@ def killthread(button, rate):
    #     for i in range(1, rate + 1):
             Popen("del 1\\temp{}{}.txt".format(UTC, str(i)))
 
-    outlog("===================")
+
     startasthread.startasthread(endprocesses)
     pingcomponents.pingcomponents["threadskilled"] = 1
 
