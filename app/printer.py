@@ -24,7 +24,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
     pingcount = 1
     threadrunning = 1
     while threadrunning < 3:
-        sleep(1)
+        sleep(0.1)
         if pingcomponents.pingcomponents["threadskilled"] == 0:
             wlog("printer is attempting to open the temp file")
             x=0
@@ -35,7 +35,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
                     break
                 except:
                     print(x)
-                sleep(1)
+                sleep(0.3)
                 x=x+1
             if x == 11:
                 outboxset("parser failure, abandoning operation. Output is \n{}".format(outstats()))
@@ -116,7 +116,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
                     completedthreads += 1
                     print("completedthreads = {}, range was = {}".format(completedthreads, rate))
                     if completedthreads == rate:
-                        print("comp threads = range")
+                        #print("comp threads = range")
                         pingcomponents.pingcomponents["pingrunningforicons"] = False
                         pingcomponents.pingcomponents["pingbutton"].config(state="active")
                         pingcomponents.pingcomponents["pingbutton"].config(

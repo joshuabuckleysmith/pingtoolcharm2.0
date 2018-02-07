@@ -50,7 +50,7 @@ prefix = tk.StringVar()
 mturadio = tk.StringVar()
 rate = tk.IntVar()
 rate.set(3)
-prefix.set("Router(dg)")
+prefix.set("")
 logoutput = tk.StringVar()
 storetxt = tk.Label(text="Store Number")
 wlog("vars set")
@@ -63,14 +63,14 @@ fgcolor = "#000000"
 
 options = collections.OrderedDict(
     [
-
-        ("IP Address", ""),
-        ("Router(dg)", "dg"),
+        ("Select Device...", ""),("IP or Name", ""),
+        ("Routger(dg)", "dg"),
         ("Switch US(ussw010)", "ussw010"),
         ("Switch Canada(casw010)", "casw010"),
         ("Register US(usrg010)", "usrg010"),
         ("Register Canada(carg010)", "carg010"),
         ("Workstation(mws)", "mws"),
+        ("Workstation(bo)", "bo"),
         ("FoH Switch(ussw030)", "ussw030")
     ]
 )
@@ -162,7 +162,7 @@ def buttons():
 
 
     ping = tk.Button(image=startreleasedicon, command=spf, relief='sunken', border=0)  # Button runs SPF
-    ping.place(x=108, y=85)
+    ping.place(x=108, y=96)
     pingcomponents.pingcomponents["pingbutton"] = ping
 
     def buttenter(*args):
@@ -239,8 +239,8 @@ def buttons():
                 ratetext.set("Very Fast")
             sleep(0.1)
     ratelabel = tk.Label(root, textvariable=ratetext)
-    ratelabel.place(x=20, y=160)
-    rateslider.place(x=20, y=180)
+    ratelabel.place(x=10, y=160)
+    rateslider.place(x=10, y=180)
     startasthread.startasthread(rateupdate)
 
 
@@ -274,7 +274,7 @@ def buttons():
     outboxset("Testing...")
 
 
-    sp.sp("::1", "primary", "1", ping, cancelping, "IP Address", options, storetxt, "1345",
+    sp.sp("::1", "primary", "1", ping, cancelping, "IP or Name", options, storetxt, "1345",
           "4000", 3)
 
 
