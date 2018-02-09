@@ -68,19 +68,10 @@ options = collections.OrderedDict(
         ("IP Address or Name", ""),
         ("Router", "dg"),
         ("Workstation", "mws"),
-        ("Workstation", "bo"),
         ("US Switch BoH", "ussw010"),
-        ("US Switch FoH", "ussw030"),
         ("US Register 1", "usrg010"),
-        ("US Register 2", "usrg020"),
-        ("US Register 3", "usrg030"),
-        ("US Register 4", "usrg040"),
         ("Canada Switch BoH", "casw010"),
-        ("Canada Register 1", "carg010"),
-        ("Canada Register 2", "carg010"),
-        ("Canada Register 3", "carg010"),
-        ("Canada Register 4", "carg010")
-
+        ("Canada Register 1", "carg010")
     ]
 )
 
@@ -356,4 +347,10 @@ def buttons():
     root.resizable(width=False, height=False)
     root.geometry('{}x{}'.format(610,210))
     #root.configure(bg=bgcolor)
+    def close_app():
+        root.destroy()
+    root.protocol('WM_DELETE_WINDOW', close_app)
+
+
+
     root.mainloop()

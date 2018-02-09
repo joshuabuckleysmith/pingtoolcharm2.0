@@ -30,11 +30,11 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
             x=0
             while x <=20:
                 try:
-                    print(x)
+                    #print(x)
                     openfile = open("1\\temp{}.txt".format(pingcomponents.pingcomponents["UTCIdentity"]+str(threadnumber)), 'r')
                     break
                 except:
-                    print(x)
+                    pass
                 sleep(0.5)
                 x=x+1
             if x == 11:
