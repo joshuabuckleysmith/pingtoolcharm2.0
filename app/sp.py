@@ -20,5 +20,6 @@ def sp(a, b, c, d, e, f, g, h, i, j, k):
     pingcomponents.pingcomponents["threadscomplete"] = 0
     pingcomponents.pingcomponents["threadskilled"] == 0
     pingcomponents.pingcomponents["pingrunningforicons"] = True
+    pingcomponents.pingcomponents["storelabel"] = h
     wlog("startping runs this point")
     startasthread.startasthread(startping.startping(a, b, c, d, e, f, g, h ,k))

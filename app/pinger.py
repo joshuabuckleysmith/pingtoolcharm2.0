@@ -44,27 +44,27 @@ def pinger(store, pingnumber, primsec, buttondis, buttonen, prefix, rate):
     outputtolog = (
     "ping -n {} -l {} {}{}".format(pingnumber, mtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]))
     outbox(outputtolog)
-    print("actual number {}".format(actualpingnumber))
+    #print("actual number {}".format(actualpingnumber))
     if actualpingnumber/rate < 1:
         rate = actualpingnumber
     pingperthread = actualpingnumber/rate
     a, b = math.modf(pingperthread)
-    print("a = {}, b = {}".format(a, b))
+    #print("a = {}, b = {}".format(a, b))
     remainingpings = round(a*rate)
-    print("remaining pings = {}".format(remainingpings))
+    #print("remaining pings = {}".format(remainingpings))
     pingperthreaddict = {}
     for i in range(1, rate+1):
         pingperthreaddict["{}".format(i)] = b
         if remainingpings > 0:
             pingperthreaddict["{}".format(i)] += 1
             remainingpings -= 1
-    print("pingperthread number {}".format(pingperthread))
-    print(pingperthreaddict["{}".format(1)])
+    #print("pingperthread number {}".format(pingperthread))
+    #print(pingperthreaddict["{}".format(1)])
     pingcomponents.pingcomponents["threadcount"] = rate
 
     for i in range(1, rate+1):
-        print("creating thread {}".format(i))
-        print('ping per thread in thread {} is {}'.format(pingperthreaddict[str(i)],pingperthreaddict[str(i)]))
+        #print("creating thread {}".format(i))
+        #print('ping per thread in thread {} is {}'.format(pingperthreaddict[str(i)],pingperthreaddict[str(i)]))
         pingthreads[str(i)] = Popen("ping -n {} -l {} {}{} > 1\\temp{}.txt".format(pingperthreaddict[str(i)], mtu, prefix, store, pingcomponents.pingcomponents["UTCIdentity"]+str(i)), shell=True)
         pingcomponents.pingcomponents["process{}".format(i)] = pingthreads[str(i)].pid
         pingcomponents.pingcomponents["generatestats{}".format(i)] = 1

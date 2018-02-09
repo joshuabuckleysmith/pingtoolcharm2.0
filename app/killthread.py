@@ -31,6 +31,7 @@ def killthread(button, rate):
     pingcomponents.pingcomponents["threadskilled"] = 1
 
     pingcomponents.pingcomponents["pingbutton"].config(state="active")
+    pingcomponents.pingcomponents["pingbutton"].config(image=pingcomponents.pingcomponents["starticon"])
     wlog("in killthread after taskkill threadskilled = {}".format(pingcomponents.pingcomponents["threadskilled"]))
     pingcomponents.pingcomponents["pingrunningforicons"] = False
     pingcomponents.pingcomponents["pingbutton"].config(command=pingcomponents.pingcomponents["pingfunction"])

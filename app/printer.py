@@ -49,11 +49,15 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
         if openstring == "Ping request could not find host {}{}. " \
                          "Please check the name and try again.\n".format(prefix, store):
             outboxset(
-                "Ping request could not find host {}{}.\nIs your prefix correct? "
+                "Ping request could not find host {}{}.\nIs your prefix correct? This is usually caused by entering "
+                "an IP address when a store number is expected. When entering a store number, make sure to select "
+                "a store device from the dropdown menu. If entering an IP address, select 'IP Address or Name'"
                 "\nPlease start ping again when ready.\n".format(
                     prefix, store))
             outlogset(
-                "Ping request could not find host {}{}.\nIs your prefix correct? "
+                "Ping request could not find host {}{}.\nIs your prefix correct? This is usually caused by entering "
+                "an IP address when a store number is expected. When entering a store number, make sure to select "
+                "a store device from the dropdown menu. If entering an IP address, select 'IP Address or Name'"
                 "\nPlease start ping again when ready.\n".format(
                     prefix, store))
             openfile.close()
@@ -87,7 +91,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
             pingcomponents.pingcomponents["statsoutputbox"].insert(tk.END, "\n")
 
             if pingcomponents.pingcomponents["startupsuccessful"] == 0:
-                print("startupsuccessful was 0, setting to 1 and cleaning up")
+                #print("startupsuccessful was 0, setting to 1 and cleaning up")
                 pingcomponents.pingcomponents["startupsuccessful"] = 1
                 clearoutbox()
                 wlog("get outbox returned ({})".format(getoutbox()))
@@ -114,7 +118,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
             for i in range (1, rate+1):
                 if pingcomponents.pingcomponents["generatestats{}".format(i)] == 0:
                     completedthreads += 1
-                    print("completedthreads = {}, range was = {}".format(completedthreads, rate))
+                    #print("completedthreads = {}, range was = {}".format(completedthreads, rate))
                     if completedthreads == rate:
                         pingcomponents.pingcomponents["threadscomplete"] = 1
                         #print("comp threads = range")

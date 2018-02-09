@@ -15,6 +15,7 @@ def startping(store, test, pingnumber, buttondis, buttonen, prefix, options, sto
     pingcomponents.pingcomponents["count"] = 0
     wlog("startping run")
     store = pingcomponents.pingcomponents["store"]
+    print("store is {}".format(store))
     pingnumber = pingcomponents.pingcomponents["pingnumber"]
     prefix = options[pingcomponents.pingcomponents["prefix"]]
 
@@ -31,7 +32,7 @@ def startping(store, test, pingnumber, buttondis, buttonen, prefix, options, sto
             try:
                 IPy.IP(store)
             except:
-                outbox("IP Address was invalid")
+                outbox("IP Address {} was invalid".format(store))
                 return
         if pingnumber != 0:
             wlog("ping number was {}".format(pingnumber))

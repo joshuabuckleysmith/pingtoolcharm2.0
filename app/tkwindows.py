@@ -31,6 +31,7 @@ outboxclear = outputboxprinter.outbox.clear
 outlogclear = outputboxprinter.outlog.clear
 
 startreleasedicon = tk.PhotoImage(file="SE.png")
+pingcomponents.pingcomponents["starticon"]=startreleasedicon
 startrollovericon = tk.PhotoImage(file="SE.png")
 startpressedicon = tk.PhotoImage(file="SR.png")
 cancelreleasedicon = tk.PhotoImage(file="CE.png")
@@ -63,15 +64,23 @@ fgcolor = "#000000"
 
 options = collections.OrderedDict(
     [
-        ("Select Device...", ""),("IP or Name", ""),
-        ("Routger(dg)", "dg"),
-        ("Switch US(ussw010)", "ussw010"),
-        ("Switch Canada(casw010)", "casw010"),
-        ("Register US(usrg010)", "usrg010"),
-        ("Register Canada(carg010)", "carg010"),
-        ("Workstation(mws)", "mws"),
-        ("Workstation(bo)", "bo"),
-        ("FoH Switch(ussw030)", "ussw030")
+        ("Select Device...", ""),
+        ("IP Address or Name", ""),
+        ("Router", "dg"),
+        ("Workstation", "mws"),
+        ("Workstation", "bo"),
+        ("US Switch BoH", "ussw010"),
+        ("US Switch FoH", "ussw030"),
+        ("US Register 1", "usrg010"),
+        ("US Register 2", "usrg020"),
+        ("US Register 3", "usrg030"),
+        ("US Register 4", "usrg040"),
+        ("Canada Switch BoH", "casw010"),
+        ("Canada Register 1", "carg010"),
+        ("Canada Register 2", "carg010"),
+        ("Canada Register 3", "carg010"),
+        ("Canada Register 4", "carg010")
+
     ]
 )
 
@@ -107,7 +116,7 @@ def buttons():
     hmtutxt = tk.Label(text="MTU")  # Ping test labels for text boxes.
 
     storeentry = ttk.Entry(root, textvariable=store) # Entry box for store number for ip address
-    storeentry.insert(tk.END, "::1")
+    storeentry.insert(tk.END, "127.0.0.1")
     storeentry.config(width=12)
     storeentry.place(x=10, y=30)
     pingentry = ttk.Entry(textvariable=pingnumber) # Entry box for ping number
@@ -274,7 +283,7 @@ def buttons():
     outboxset("Testing...")
 
 
-    sp.sp("::1", "primary", "1", ping, cancelping, "IP or Name", options, storetxt, "1345",
+    sp.sp("127.0.0.1", "primary", "1", ping, cancelping, "IP Address or Name", options, storetxt, "1345",
           "4000", 1)
 
 
@@ -335,9 +344,9 @@ def buttons():
     def textdaemonf(prefix, storetxt):
         wlog("textdaemonf run")
         while True:
-            if prefix.get() == "IP Address":
+            if prefix.get() == "IP or Name":
                 storetxt['text'] = "IP Address"
-            if prefix.get() != "IP Address":
+            if prefix.get() != "IP or Name":
                 storetxt['text'] = "Store Number"
             sleep(0.1)
 
