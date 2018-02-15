@@ -28,17 +28,18 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
         if pingcomponents.pingcomponents["threadskilled"] == 0:
             wlog("printer is attempting to open the temp file")
             x=0
-            while x <=20:
+            while x <=30:
                 try:
                     #print(x)
                     openfile = open("1\\temp{}.txt".format(pingcomponents.pingcomponents["UTCIdentity"]+str(threadnumber)), 'r')
                     break
                 except:
                     pass
-                sleep(0.5)
+                sleep(1)
                 x=x+1
-            if x == 11:
+            if x == 30:
                 outboxset("parser failure, abandoning operation. Output is \n{}".format(outstats()))
+                pingcomponents.pingcomponents["threadscomplete"] == 1
                 return
         if pingcomponents.pingcomponents["threadskilled"] == 1:
             #bails out of this if the thread was killed by killthread
@@ -82,7 +83,7 @@ def printer(monitoredthread, store, prefix, threadnumber, rate):
                 continue
         if threadrunning == 2:
             #print("th1 was 2")
-            print("printer is running, pinger thread ended just now".format(store))
+            #print("printer is running, pinger thread ended just now".format(store))
             a = outstats(threadnumber)
             wlog("a is set to {}".format(a))
             pingcomponents.pingcomponents["statsoutputbox"].delete(index1=(1.0), index2=tk.END)
