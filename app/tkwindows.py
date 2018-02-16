@@ -151,11 +151,8 @@ def buttons():
         outboxclear()
         outlogclear()
         ping.config(command=killthreadf)
-        ratesent = rate.get()
-        if ratesent == 3:
-            ratesent = 5
-        if ratesent == 4:
-            ratesent = 30
+        ratesent = int(rate.get())
+
         sp.sp(store.get(), mturadio.get(), pingnumber.get(), ping, cancelping, prefix.get(), options, storetxt, mtu.get(), hmtu.get(), ratesent)
 
     pingcomponents.pingcomponents["pingfunction"]=spf
@@ -226,21 +223,27 @@ def buttons():
     #================================================================== rate slider
     ratetext=tk.StringVar()
     ratetext.set("1")
-    rateslider = tk.Scale(root, from_=1, to=4, variable=rate, showvalue = 0, orient=tk.HORIZONTAL)
+    rateslider = tk.Scale(root, from_=1, to=15, variable=rate, showvalue = 0, orient=tk.HORIZONTAL, length=80, troughcolor='#EEEEEE')
+    #rateslider = tk.Entry(root, textvariable=rate, width=5)
     def rateupdate():
         while True:
-            if rate.get()==1:
-                ratetext.set("Slow")
-            if rate.get()==2:
-                ratetext.set("Medium")
-            if rate.get()==3:
-                ratetext.set("Fast")
-            if rate.get()==4:
-                ratetext.set("Very Fast")
-            sleep(0.1)
+            i = rate.get()
+            if i==1:
+                ratetext.set("Checkout".format(i))
+                rateslider.config(troughcolor='#EEEEEE')
+            if i>1:
+                if i < 10:
+                    ratetext.set("{} (Fast)".format(i))
+                    rateslider.config(troughcolor='#EEEEbb')
+            if i>=10:
+                ratetext.set("{} (Very Fast)".format(i))
+                rateslider.config(troughcolor='#999900')
+            sleep(0.02)
     ratelabel = tk.Label(root, textvariable=ratetext)
-    ratelabel.place(x=10, y=160)
-    rateslider.place(x=10, y=180)
+    ratelabel2 = tk.Label(root, text="Ping Rate / Second")
+    ratelabel.place(x=110, y=185)
+    ratelabel2.place(x=9, y=160)
+    rateslider.place(x=11, y=185)
     startasthread.startasthread(rateupdate)
 
 
